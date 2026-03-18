@@ -33,6 +33,7 @@ import (
 	metricsserver "sigs.k8s.io/controller-runtime/pkg/metrics/server"
 
 	criuorgv1 "github.com/checkpoint-restore/checkpoint-restore-operator/api/v1"
+	criuorgv1alpha1 "github.com/checkpoint-restore/checkpoint-restore-operator/api/v1alpha1"
 	"github.com/checkpoint-restore/checkpoint-restore-operator/internal/controller"
 	//+kubebuilder:scaffold:imports
 )
@@ -46,6 +47,7 @@ func init() {
 	utilruntime.Must(clientgoscheme.AddToScheme(scheme))
 
 	utilruntime.Must(criuorgv1.AddToScheme(scheme))
+	utilruntime.Must(criuorgv1alpha1.AddToScheme(scheme))
 	//+kubebuilder:scaffold:scheme
 }
 
@@ -94,6 +96,13 @@ func main() {
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "CheckpointRestoreOperator")
+		os.Exit(1)
+	}
+	if err := (&controller.ContainerCheckpointReconciler{
+		Client: mgr.GetClient(),
+		Scheme: mgr.GetScheme(),
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "Failed to create controller", "controller", "ContainerCheckpoint")
 		os.Exit(1)
 	}
 	//+kubebuilder:scaffold:builder

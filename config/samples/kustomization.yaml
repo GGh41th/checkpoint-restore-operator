@@ -1,4 +1,7 @@
 ## Append samples of your project ##
 resources:
 - _v1_checkpointrestoreoperator.yaml
+- v1alpha1_containercheckpoint.yaml
+- v1alpha2_containercheckpoint.yaml
+- v1beta1_containercheckpoint.yaml
 #+kubebuilder:scaffold:manifestskustomizesamples

@@ -1,0 +1,9 @@
+apiVersion: criu.org/v1alpha1
+kind: ContainerCheckpoint
+metadata:
+  labels:
+    app.kubernetes.io/name: checkpoint-restore-operator
+    app.kubernetes.io/managed-by: kustomize
+  name: containercheckpoint-sample
+spec:
+  # TODO(user): Add fields here

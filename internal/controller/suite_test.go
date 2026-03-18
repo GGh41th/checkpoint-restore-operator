@@ -31,6 +31,8 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
 	criuorgv1 "github.com/checkpoint-restore/checkpoint-restore-operator/api/v1"
+	criuorgv1alpha1 "github.com/checkpoint-restore/checkpoint-restore-operator/api/v1alpha1"
+	criuorgv1beta1 "github.com/checkpoint-restore/checkpoint-restore-operator/api/v1beta1"
 	//+kubebuilder:scaffold:imports
 )
 
@@ -63,6 +65,15 @@ var _ = BeforeSuite(func() {
 	Expect(cfg).NotTo(BeNil())
 
 	err = criuorgv1.AddToScheme(scheme.Scheme)
+	Expect(err).NotTo(HaveOccurred())
+
+	err = criuorgv1alpha1.AddToScheme(scheme.Scheme)
+	Expect(err).NotTo(HaveOccurred())
+
+	err = criuorgv1alpha2.AddToScheme(scheme.Scheme)
+	Expect(err).NotTo(HaveOccurred())
+
+	err = criuorgv1beta1.AddToScheme(scheme.Scheme)
 	Expect(err).NotTo(HaveOccurred())
 
 	//+kubebuilder:scaffold:scheme
