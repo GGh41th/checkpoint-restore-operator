@@ -55,6 +55,8 @@ type Condition struct {
 }
 ```
 
+Further policies weren't added since a POC is required before even considering a policy, the ones added above server only as an initial design.
+
 ## ContainerCheckpoint Status
 
 ```go
