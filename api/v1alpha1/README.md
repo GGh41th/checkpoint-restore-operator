@@ -17,7 +17,6 @@ type ContainerCheckpointSpec struct {
 	// Compression field is yet to be discussed
 	// Compression string `json:"compression,omitempty"`
 
-	Path string `json:"path,omitempty"`
 
 	Policy CheckpointPolicy
 }
@@ -28,10 +27,8 @@ type ContainerCheckpointSpec struct {
 **ContainerName**: The container to be checkpointed\
 **Namespace**: The pod's namespace\
 **Compression**: If we can do it efficiently, we might compress the checkpoints.\
-**Path**: A custom path to store the checkpoints.\
 **Policy**: A map of mutually execlusive fields that specify the trigger for the checkpoint process.
 
-**Note that fields which require node access (e.g,. via bind mounts) such as compression and path are still being considered, they might get removed later on**
 
 ```go
 type CheckpointPolicy struct {
@@ -43,8 +40,6 @@ type CheckpointPolicy struct {
 	NodeConditions []Condition `json:"nodeConditions,omitempty"`
 
 	OnDrain bool `json:"onDrain,omitempty"`
-
-	OnEvict bool `json:"onEvict,omitempty"`
 }
 
 type Condition struct {
@@ -53,9 +48,13 @@ type Condition struct {
 
 	Status metav1.ConditionStatus
 }
+
+type ResourceThreshold struct {
+	cpu    string
+	memory string
+}
 ```
 
-Further policies weren't added since a POC is required before even considering a policy, the ones added above server only as an initial design.
 
 ## ContainerCheckpoint Status
 
@@ -64,7 +63,7 @@ type ContainerCheckpointStatus struct {
 
 	Phase ContainerCheckpointPhase `json:"phase,omitempty"`
 
-	CheckpointName string `json:"checkpointname,omitempty"`
+	CheckpointPath string `json:"checkpointPath,omitempty"`
 
 	NodeName string `json:"nodeName,omitempty"`
 
@@ -90,7 +89,7 @@ const (
 - Ready: Checkpointing has finished succesfully.
 - Failed: Checkpointing has failed with a fatal error.
 
-**CheckpointName**: The checkpoint file name on disk (the item field in the json response)
+**CheckpointPath**: The checkpoint path on disk (the item field in the json response)
 
 **NodeName**: The pod's node name.
 

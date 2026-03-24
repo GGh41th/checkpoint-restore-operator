@@ -17,7 +17,6 @@ limitations under the License.
 package v1alpha1
 
 import (
-	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -40,17 +39,20 @@ type Condition struct {
 	Status metav1.ConditionStatus
 }
 
+type ResourceThreshold struct {
+	cpu    string
+	memory string
+}
+
 type CheckpointPolicy struct {
 	// +optional
 	Schedule string `json:"schedule,omitempty"`
 	// +optional
-	Resources corev1.ResourceList `json:"resources,omitempty"`
+	Resources ResourceThreshold `json:"resources,omitempty"`
 	// +optional
 	NodeConditions []Condition `json:"nodeConditions,omitempty"`
 	// +optional
 	OnDrain bool `json:"onDrain,omitempty"`
-	// +optional
-	OnEvict bool `json:"onEvict,omitempty"`
 }
 
 type ContainerCheckpointSpec struct {
@@ -69,10 +71,6 @@ type ContainerCheckpointSpec struct {
 	// Compression field is yet to be discussed
 	// Compression string `json:"compression,omitempty"`
 
-	// Custom path on the node to store checkpoints.
-	// +optional
-	Path string `json:"path,omitempty"`
-
 	// A map of mutually exclusive checkpointing policies.
 	// +optional
 	Policy CheckpointPolicy
@@ -82,7 +80,7 @@ type ContainerCheckpointStatus struct {
 	// +optional
 	Phase ContainerCheckpointPhase `json:"phase,omitempty"`
 	// +optional
-	CheckPointName string `json:"checkpointname,omitempty"`
+	CheckPointPath string `json:"checkpointPath,omitempty"`
 	// +optional
 	NodeName string `json:"nodeName,omitempty"`
 	// The status of each condition is one of True, False, or Unknown.
